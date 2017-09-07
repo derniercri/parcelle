@@ -1,5 +1,5 @@
 import Gp = require("geoportal-access-lib")
-import GeoportalWfsClient = require('./../lib/geoportal-wfs-client')
+import GeoportalWfsClient = require('./geoportal-wfs-client')
 
 export default key => {
     const client = new GeoportalWfsClient(key)

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Gp = require("geoportal-access-lib");
-const GeoportalWfsClient = require("./../libs/geoportal-wfs-client");
+const GeoportalWfsClient = require("./geoportal-wfs-client");
 exports.default = key => {
     const client = new GeoportalWfsClient(key);
     return {

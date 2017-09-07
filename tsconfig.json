@@ -7,14 +7,12 @@
       "strictNullChecks": false,
       "sourceMap": true,
       "declaration": false,
-      "outDir": "dist",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
+      "outDir": "dist/",
       "allowJs": true
     },
     "exclude": [
-      "./src/**/*.test.ts",
-      "node_modules"
+      "node_modules",
+      "dist"
     ],
     "awesomeTypescriptLoaderOptions": {
     }

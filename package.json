@@ -1,0 +1,29 @@
+{
+  "name": "parcel",
+  "version": "0.1.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": "git@github.com:laibulle/parcel.git",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  },
+  "author": "Guillaume Bailleul <laibulle@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@turf/turf": "^4.7.1",
+    "@types/geojson": "^1.0.3",
+    "geoportal-access-lib": "^1.0.1"
+  }
+}
