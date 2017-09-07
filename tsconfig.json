@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2015",
+      "noImplicitAny": false,
+      "removeComments": true,
+      "strictNullChecks": false,
+      "sourceMap": true,
+      "declaration": false,
+      "outDir": "dist",
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "allowJs": true
+    },
+    "exclude": [
+      "./src/**/*.test.ts",
+      "node_modules"
+    ],
+    "awesomeTypescriptLoaderOptions": {
+    }
+  }
