@@ -1,9 +1,14 @@
 # Parcel
 
+__Getting started__
 ```
-import Parcel from 'parcel'
+npm install git+ssh://git@github.com/laibulle/parcel.git
+```
 
-const parcel = Parcel(process.env.API_KEY)
+```
+const Parcel = require('parcel')
+
+const parcel = Parcel.default(process.env.API_KEY)
 
 parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
     return parcel.findParcel(address.suggestedLocations[0].position)
