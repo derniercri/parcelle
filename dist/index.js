@@ -13,7 +13,7 @@ exports.default = (key) => {
         findBuildingFeatures: (parcelFeature) => {
             return gp.fetchBuildingsVectors(bbox(parcelFeature)).then((collection) => collection.features
                 .map(feature => turf.intersect(parcelFeature, feature))
-                .filter(feature => feature != null));
+                .filter(feature => feature.geometry != null));
         },
         calculateArea: (obj) => calculateArea(obj),
     };

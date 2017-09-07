@@ -9,7 +9,11 @@ parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
 }).then(res => {
     return res.features[0];
 }).then(parceFeature => {
-    parcel.findBuildingFeatures(parceFeature);
+    console.log(`Parcel area: ${parcel.calculateArea(parceFeature)}`);
+    return parcel.findBuildingFeatures(parceFeature);
 }).then(res => {
+    res.map(item => {
+        console.log(`Building area: ${parcel.calculateArea(item)}`);
+    });
 });
 //# sourceMappingURL=index.js.map

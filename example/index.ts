@@ -12,7 +12,11 @@ parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
     return res.features[0]
     //console.log(JSON.stringify(res.features, null, 2))
 }).then(parceFeature => {
+    console.log(`Parcel area: ${parcel.calculateArea(parceFeature)}`)
     //console.log(JSON.stringify(parceFeature, null, 2))
-    parcel.findBuildingFeatures(parceFeature)
+    return parcel.findBuildingFeatures(parceFeature)
 }).then(res => {
+    res.map(item => {
+        console.log(`Building area: ${parcel.calculateArea(item)}`)
+    })
 })

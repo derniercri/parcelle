@@ -104,7 +104,7 @@ export default key => {
                 }
             )
         },
-        fetchBuildingsVectors: (bbox) => {
+        fetchBuildingsVectors: (bbox): Promise<VectorResult> => {
             return client.getFeatures(
                 'BDTOPO_BDD_WLD_WGS84G:bati_remarquable,BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
                 {

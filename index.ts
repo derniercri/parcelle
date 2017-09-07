@@ -25,7 +25,7 @@ export default (key: string) => {
           return gp.fetchBuildingsVectors(bbox(parcelFeature)).then((collection) => 
             collection.features
                 .map(feature => turf.intersect(parcelFeature, feature))
-                .filter(feature => feature != null))},
+                .filter(feature => feature.geometry != null))},
 
         // Calculate area from feature
         calculateArea: (obj: GeoJSON.Feature<GeoJSON.Polygon>) => calculateArea(obj),
