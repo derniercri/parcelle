@@ -42,13 +42,13 @@ exports.default = key => {
                 });
             });
         },
-        fetchParcelVectors: (dep, city, number, section, sheet) => {
+        fetchParcelVectors: (attr) => {
             return client.getFeatures('BDPARCELLAIRE-VECTEUR_WLD_BDD_WGS84G:parcelle', {
-                code_dep: dep,
-                code_com: city,
-                numero: number,
-                section: section,
-                feuille: sheet,
+                code_dep: attr.department,
+                code_com: attr.commune,
+                numero: attr.number,
+                section: attr.section,
+                feuille: attr.sheet,
                 _limit: 10
             });
         },

@@ -1,9 +1,11 @@
 import * as turf from '@turf/turf'
 import * as GeoJSON from 'geojson' 
-import Geoportail from './geoportail'
+import Geoportail, { Position, PlaceAttributes } from './geoportail'
+
+export { Position, Address, Parcel, PlaceAttributes } from './geoportail'
 
 const calculateArea = (obj: any) => turf.area(obj)
-const bbox = (pointsRaw) => turf.bbox(turf.lineString(pointsRaw))
+const bbox = (pointsRaw) => turf.bbox(pointsRaw)
 
 export default (key: string) => {
     const gp = Geoportail(key)
@@ -12,27 +14,23 @@ export default (key: string) => {
         findAddress: (address: string) => gp.findAddress(address),
 
         // Find parcel info from position
-        findParcel: (x: Number, y: Number ) => 
-            gp.fetchParcelInfo(x, y).then((result: any) => 
-                result.locations.length > 0 ? result.locations[0]: null),
+        findParcel: (pos: Position) => gp.fetchParcelInfo(pos.x, pos.y),
 
         // Find parcel features from info
-        findPacelFeatures: (dep: string, com: string, num: Number, sec: string, sheet: Number) => 
-            featuresCollection => featuresCollection.features.length > 0 ? 
-                featuresCollection.features[0]: null, 
+        findPacelFeatures: (attr: PlaceAttributes) => 
+          gp.fetchParcelVectors(attr).then(featuresCollection => featuresCollection), 
         
         // Fetch building features on a guiven parcel
-        findBuildingFeatures: (parcelFeature: any) => gp.fetchBuildingsVectors(bbox(parcelFeature)).then((collection: any) => 
+        findBuildingFeatures: (parcelFeature: GeoJSON.Feature<GeoJSON.Polygon>) => {
+          return gp.fetchBuildingsVectors(bbox(parcelFeature)).then((collection) => 
             collection.features
                 .map(feature => turf.intersect(parcelFeature, feature))
-                .filter(feature => feature != null)),
+                .filter(feature => feature != null))},
 
         // Calculate area from feature
-        calculateArea: (obj: any) => calculateArea(obj),
+        calculateArea: (obj: GeoJSON.Feature<GeoJSON.Polygon>) => calculateArea(obj),
     }
 }
-
-
 
 
 /*gpClient.findAddress(address).then(address => {

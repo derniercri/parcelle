@@ -1,11 +1,60 @@
 import Gp = require("geoportal-access-lib")
 import GeoportalWfsClient = require('./geoportal-wfs-client')
+import * as GeoJSON from 'geojson'
+
+export interface Position {
+  x: number,
+  y: number
+}
+  
+export interface SuggestedLocations {
+  type: string,
+  position: Position,
+  commune: string,
+  fullText: string,
+  postalCode: string, 
+  classification: Number,
+  street: string
+}
+  
+export interface Address {
+  suggestedLocations: Array<SuggestedLocations>
+}
+
+export interface ParcelResult {
+    locations: Array<Parcel>
+}
+
+export interface PlaceAttributes {
+    cadastralParcel: string,
+    municipality: string,
+    number: string,
+    sheet: string,
+    section: string,
+    department: string,
+    absorbedCity: string,
+    commune: string,
+    insee: string,
+    origin: string
+}
+
+export interface Parcel {
+    position: Position,
+    placeAttributes: PlaceAttributes,
+    type: string,
+    CLASSNAME: string,
+    searchCenterDistance: number
+}
+
+export interface VectorResult {
+    features: Array<GeoJSON.Feature<GeoJSON.Polygon>>
+}
 
 export default key => {
     const client = new GeoportalWfsClient(key)
     
     return {
-        findAddress: (address) => {
+        findAddress: (address): Promise<Address | null> => {
             return new Promise((resolve,reject) => {
                 Gp.Services.autoComplete({
                     apiKey : key,
@@ -22,7 +71,7 @@ export default key => {
                 })
             })
         },
-        fetchParcelInfo: (x, y) => {
+        fetchParcelInfo: (x, y): Promise<ParcelResult> => {
             return new Promise((resolve, reject) => {
                 Gp.Services.reverseGeocode({
                     apiKey : key, 
@@ -42,15 +91,15 @@ export default key => {
                 })
             })
         },
-        fetchParcelVectors: (dep, city, number, section, sheet) => {
+        fetchParcelVectors: (attr: PlaceAttributes): Promise<VectorResult> => {
             return client.getFeatures(
                 'BDPARCELLAIRE-VECTEUR_WLD_BDD_WGS84G:parcelle',
                 {
-                    code_dep: dep,
-                    code_com: city,
-                    numero: number,
-                    section: section,
-                    feuille: sheet,
+                    code_dep: attr.department,
+                    code_com: attr.commune,
+                    numero: attr.number,
+                    section: attr.section,
+                    feuille: attr.sheet,
                     _limit: 10
                 }
             )
