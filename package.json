@@ -24,6 +24,7 @@
   "dependencies": {
     "@turf/turf": "^4.7.1",
     "@types/geojson": "^1.0.3",
-    "geoportal-access-lib": "^1.0.1"
+    "geoportal-access-lib": "^1.0.1",
+    "xmlhttprequest": "^1.8.0"
   }
 }
