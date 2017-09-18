@@ -38,6 +38,7 @@ exports.default = (apiKey, referer) => {
                 } })).then((res) => inverseFeatureCollection(res.data));
         },
         buildingsVector: (bbox, maxResults) => {
+            const bboxStr = `${bbox[1]},${bbox[0]},${bbox[3]},${bbox[2]}`;
             return axios_1.default.get(wxsUrl + '/geoportail/wfs', Object.assign({}, options, { params: {
                     service: 'WFS',
                     version: '2.0.0',
@@ -45,7 +46,7 @@ exports.default = (apiKey, referer) => {
                     typename: 'BDTOPO_BDD_WLD_WGS84G:bati_remarquable,BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
                     outputFormat: 'application/json',
                     count: maxResults,
-                    bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`
+                    bbox: bboxStr
                 } })).then((res) => inverseFeatureCollection(res.data));
         },
     };
@@ -131,10 +132,7 @@ const parsePlaces = (str) => {
     });
     return obj;
 };
-const inverseFeatureCollection = (data) => {
-    data.features = data.features.map(item => inverseGeoJson(item));
-    return data;
-};
+const inverseFeatureCollection = (data) => { return Object.assign({}, data, { features: data.features.map(item => inverseGeoJson(item)) }); };
 const inverseGeoJson = (data) => {
     data.geometry.coordinates = [[data.geometry.coordinates[0][0].map(item => inverseXY(item))]];
     return data;

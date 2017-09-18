@@ -12,10 +12,12 @@ parcel.findAddress('16 rue gallieni 59160 lille').then(address => {
     //console.log(JSON.stringify(res.features, null, 2))
     return res.features[0]
 }).then(parceFeature => {
+    console.log(JSON.stringify(parceFeature, null, 2))
     console.log(`Parcel area: ${parcel.calculateArea(parceFeature)}`)
     //console.log(JSON.stringify(parceFeature, null, 2))
     return parcel.findBuildingFeatures(parceFeature)
 }).then(res => {
+    console.log(res)
     res.map(item => {
         console.log(`Building area: ${parcel.calculateArea(item)}`)
     })

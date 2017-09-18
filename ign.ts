@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as parser from 'xml2json'
 import { MultiPolygon, Feature, FeatureCollection } from 'geojson'
+
 export interface Position {
     x: number,
     y: number
@@ -94,7 +95,8 @@ export default (apiKey:string, referer: string) => {
                 }
             ).then((res) => inverseFeatureCollection(res.data))
         },
-        buildingsVector: (bbox, maxResults: number): Promise<FeatureCollection<MultiPolygon>> => {
+        buildingsVector: (bbox: number[], maxResults: number): Promise<FeatureCollection<MultiPolygon>> => {
+            const bboxStr = `${bbox[1]},${bbox[0]},${bbox[3]},${bbox[2]}`
             return axios.get(
                 wxsUrl + '/geoportail/wfs', 
                 {
@@ -106,7 +108,7 @@ export default (apiKey:string, referer: string) => {
                         typename: 'BDTOPO_BDD_WLD_WGS84G:bati_remarquable,BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
                         outputFormat: 'application/json',
                         count: maxResults,
-                        bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`
+                        bbox: bboxStr
                     }
                 }
             ).then((res) => inverseFeatureCollection(res.data))
@@ -204,10 +206,8 @@ const parsePlaces = (str: string): Parcel => {
     return obj
 }
 
-const inverseFeatureCollection = (data: FeatureCollection<MultiPolygon>) => {
-    data.features = data.features.map(item => inverseGeoJson(item))
-    return data
-}
+const inverseFeatureCollection = (data: FeatureCollection<MultiPolygon>) => 
+    { return {...data, features: data.features.map(item => inverseGeoJson(item))}}
 
 const inverseGeoJson = (data: Feature<MultiPolygon>) => {
     data.geometry.coordinates = [[data.geometry.coordinates[0][0].map(item => inverseXY(item))]]
