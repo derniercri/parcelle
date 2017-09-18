@@ -4,7 +4,7 @@ const turf = require("@turf/turf");
 const ign_1 = require("./ign");
 const calculateArea = (obj) => turf.area(obj);
 const bbox = (pointsRaw) => turf.bbox(pointsRaw);
-exports.default = (key, referer) => {
+exports.Client = (key, referer) => {
     const ignClient = ign_1.default(key, referer);
     return {
         findAddress: (address) => ignClient.autoComplete(address, 1).then(res => res[0]),

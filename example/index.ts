@@ -1,6 +1,6 @@
-import Parcel from './../index'
+import { Client } from './../index'
 
-const parcel = Parcel(process.env.API_KEY, process.env.REFERER)
+const parcel = Client(process.env.API_KEY, process.env.REFERER)
 
 parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
     //console.log(JSON.stringify(address, null, 2))

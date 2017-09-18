@@ -6,7 +6,7 @@ npm install git+ssh://git@github.com/derniercri/parcelle.git
 ```
 
 ```
-const Parcel = require('parcelle')
+const ParcelClient = require('parcelle').Client
 
 const parcel = Parcel(process.env.API_KEY, process.env.REFERER)
 

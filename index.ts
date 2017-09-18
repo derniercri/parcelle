@@ -5,7 +5,7 @@ import IgnClient, { Address, PlaceAttributes  } from './ign'
 const calculateArea = (obj: any) => turf.area(obj)
 const bbox = (pointsRaw) => turf.bbox(pointsRaw)
 
-export default (key: string, referer: string) => {
+export const Client = (key: string, referer: string) => {
     const ignClient = IgnClient(key, referer)
 
     return {
