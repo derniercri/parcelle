@@ -1,6 +1,6 @@
 import axios from 'axios'
 import * as parser from 'xml2json'
-
+import { MultiPolygon, Feature, FeatureCollection } from 'geojson'
 export interface Position {
     x: number,
     y: number
@@ -36,10 +36,6 @@ export interface Parcel {
     placeAttributes: PlaceAttributes,
     type: string,
     searchCenterDistance: number
-}
-
-export interface VectorResult {
-    features: Array<GeoJSON.Feature<GeoJSON.Polygon>>
 }
 
 export default (apiKey:string, referer: string) => {
@@ -81,7 +77,7 @@ export default (apiKey:string, referer: string) => {
                 }
             ).then((res) => parsePlaces(res.data.xml))
         },
-        parcelVector: (attr: PlaceAttributes, maxResults: number): Promise<VectorResult> => {
+        parcelVector: (attr: PlaceAttributes, maxResults: number): Promise<FeatureCollection<MultiPolygon>> => {
             return axios.get(
                 wxsUrl + '/geoportail/wfs', 
                 {
@@ -96,9 +92,9 @@ export default (apiKey:string, referer: string) => {
                         cql_filter: `code_dep='${attr.department}' and code_com='${attr.commune}' and numero='${attr.number}' and section='${attr.section}' and feuille='${attr.sheet}'`
                     }
                 }
-            ).then((res) => res.data)
+            ).then((res) => inverseFeatureCollection(res.data))
         },
-        buildingsVector: (bbox, maxResults: number): Promise<VectorResult> => {
+        buildingsVector: (bbox, maxResults: number): Promise<FeatureCollection<MultiPolygon>> => {
             return axios.get(
                 wxsUrl + '/geoportail/wfs', 
                 {
@@ -113,7 +109,7 @@ export default (apiKey:string, referer: string) => {
                         bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`
                     }
                 }
-            ).then((res) => res.data)
+            ).then((res) => inverseFeatureCollection(res.data))
         },
         
     }
@@ -207,3 +203,15 @@ const parsePlaces = (str: string): Parcel => {
 
     return obj
 }
+
+const inverseFeatureCollection = (data: FeatureCollection<MultiPolygon>) => {
+    data.features = data.features.map(item => inverseGeoJson(item))
+    return data
+}
+
+const inverseGeoJson = (data: Feature<MultiPolygon>) => {
+    data.geometry.coordinates = [[data.geometry.coordinates[0][0].map(item => inverseXY(item))]]
+    return data
+}
+
+const inverseXY = (data: number[]) => [data[1], data[0]]

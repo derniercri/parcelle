@@ -1,5 +1,5 @@
 import * as turf from '@turf/turf'
-import * as GeoJSON from 'geojson' 
+import { Feature, MultiPolygon, Polygon} from 'geojson' 
 import IgnClient, { Address, PlaceAttributes  } from './ign'
 
 const calculateArea = (obj: any) => turf.area(obj)
@@ -21,13 +21,13 @@ export const Client = (key: string, referer: string) => {
         findPacelFeatures: (attr: PlaceAttributes) => ignClient.parcelVector(attr, 10),
         
         // Fetch building features on a guiven parcel
-        findBuildingFeatures: (parcelFeature: GeoJSON.Feature<GeoJSON.Polygon>) => {
+        findBuildingFeatures: (parcelFeature: Feature<Polygon>) => {
           return ignClient.buildingsVector(bbox(parcelFeature), 10).then((collection) => 
             collection.features
                 .map(feature => turf.intersect(parcelFeature, feature))
                 .filter(feature => feature.geometry != null))},
 
         // Calculate area from feature
-        calculateArea: (obj: GeoJSON.Feature<GeoJSON.Polygon>) => calculateArea(obj),
+        calculateArea: (obj: Feature<Polygon>) => calculateArea(obj),
     }
 }

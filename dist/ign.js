@@ -35,7 +35,7 @@ exports.default = (apiKey, referer) => {
                     outputFormat: 'application/json',
                     count: maxResults,
                     cql_filter: `code_dep='${attr.department}' and code_com='${attr.commune}' and numero='${attr.number}' and section='${attr.section}' and feuille='${attr.sheet}'`
-                } })).then((res) => res.data);
+                } })).then((res) => inverseFeatureCollection(res.data));
         },
         buildingsVector: (bbox, maxResults) => {
             return axios_1.default.get(wxsUrl + '/geoportail/wfs', Object.assign({}, options, { params: {
@@ -46,7 +46,7 @@ exports.default = (apiKey, referer) => {
                     outputFormat: 'application/json',
                     count: maxResults,
                     bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`
-                } })).then((res) => res.data);
+                } })).then((res) => inverseFeatureCollection(res.data));
         },
     };
 };
@@ -131,4 +131,13 @@ const parsePlaces = (str) => {
     });
     return obj;
 };
+const inverseFeatureCollection = (data) => {
+    data.features = data.features.map(item => inverseGeoJson(item));
+    return data;
+};
+const inverseGeoJson = (data) => {
+    data.geometry.coordinates = [[data.geometry.coordinates[0][0].map(item => inverseXY(item))]];
+    return data;
+};
+const inverseXY = (data) => [data[1], data[0]];
 //# sourceMappingURL=ign.js.map

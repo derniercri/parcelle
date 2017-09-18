@@ -2,7 +2,7 @@ import { Client } from './../index'
 
 const parcel = Client(process.env.API_KEY, process.env.REFERER)
 
-parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
+parcel.findAddress('16 rue gallieni 59160 lille').then(address => {
     //console.log(JSON.stringify(address, null, 2))
     return parcel.findParcel(address)
 }).then(res => {
