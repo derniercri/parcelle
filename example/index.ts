@@ -1,14 +1,14 @@
 import Parcel from './../index'
 
-const parcel = Parcel(process.env.API_KEY)
+const parcel = Parcel(process.env.API_KEY, process.env.REFERER)
 
 parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
-    //console.log(JSON.stringify(address, null, 2))
-    return parcel.findParcel(address.suggestedLocations[0].position)
+    console.log(JSON.stringify(address, null, 2))
+    return parcel.findParcel(address)
 }).then(res => {
-    //console.log(JSON.stringify(res, null, 2))
-    return parcel.findPacelFeatures(res.locations[0].placeAttributes)
-}).then(res => {
+    console.log(JSON.stringify(res, null, 2))
+    return parcel.findPacelFeatures(res.placeAttributes)
+})/*.then(res => {
     return res.features[0]
     //console.log(JSON.stringify(res.features, null, 2))
 }).then(parceFeature => {
@@ -19,4 +19,4 @@ parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
     res.map(item => {
         console.log(`Building area: ${parcel.calculateArea(item)}`)
     })
-})
+})*/

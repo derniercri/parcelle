@@ -333,8 +333,8 @@ module.exports = function xhrAdapter(config) {
 
     var request = new XMLHttpRequest();
     var loadEvent = 'onreadystatechange';
-    var xDomain = false;
-
+		var xDomain = false;
+		
     // For IE 8/9 CORS support
     // Only supports POST and GET calls and doesn't returns the response headers.
     // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
@@ -347,8 +347,8 @@ module.exports = function xhrAdapter(config) {
       xDomain = true;
       request.onprogress = function handleProgress() {};
       request.ontimeout = function handleTimeout() {};
-    }
-
+		}
+		
     // HTTP basic authentication
     if (config.auth) {
       var username = config.auth.username || '';
@@ -661,6 +661,7 @@ function Axios(instanceConfig) {
  * @param {Object} config The config specific for this request (merged with this.defaults)
  */
 Axios.prototype.request = function request(config) {
+	
   /*eslint no-param-reassign:0*/
   // Allow for axios('example/url'[, config]) a la fetch API
   if (typeof config === 'string') {

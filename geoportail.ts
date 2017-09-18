@@ -1,11 +1,9 @@
-import Gp = require("geoportal-access-lib")
+import Gp = require("geoportal-access-lib/dist/GpServices-src")
 import GeoportalWfsClient = require('./geoportal-wfs-client')
 import * as GeoJSON from 'geojson'
+import IgnClient, { Address, PlaceAttributes } from './ign'
 
-export interface Position {
-  x: number,
-  y: number
-}
+
   
 export interface SuggestedLocations {
   type: string,
@@ -17,80 +15,16 @@ export interface SuggestedLocations {
   street: string
 }
   
-export interface Address {
-  suggestedLocations: Array<SuggestedLocations>
-}
-
-export interface ParcelResult {
-    locations: Array<Parcel>
-}
-
-export interface PlaceAttributes {
-    cadastralParcel: string,
-    municipality: string,
-    number: string,
-    sheet: string,
-    section: string,
-    department: string,
-    absorbedCity: string,
-    commune: string,
-    insee: string,
-    origin: string
-}
-
-export interface Parcel {
-    position: Position,
-    placeAttributes: PlaceAttributes,
-    type: string,
-    CLASSNAME: string,
-    searchCenterDistance: number
-}
 
 export interface VectorResult {
     features: Array<GeoJSON.Feature<GeoJSON.Polygon>>
 }
 
-export default key => {
+export default (key, referer) => {
     const client = new GeoportalWfsClient(key)
+    const ignClient = IgnClient(key, referer)
     
     return {
-        findAddress: (address): Promise<Address | null> => {
-            return new Promise((resolve,reject) => {
-                Gp.Services.autoComplete({
-                    apiKey : key,
-                    text : address,      
-                    filterOptions : {
-                        type : ["StreetAddress"]
-                    },
-                    onSuccess : (result) => {
-                        resolve(result)
-                    },
-                    onFailure: (err) => {
-                        reject(err)
-                    }
-                })
-            })
-        },
-        fetchParcelInfo: (x, y): Promise<ParcelResult> => {
-            return new Promise((resolve, reject) => {
-                Gp.Services.reverseGeocode({
-                    apiKey : key, 
-                    position : { 
-                        x,
-                        y
-                    },
-                    filterOptions : {
-                        type : ["CadastralParcel"]
-                    },
-                    onSuccess:  (result) => {
-                        resolve(result)
-                    },
-                    onFailure: (err) => {
-                        reject(err)
-                    }
-                })
-            })
-        },
         fetchParcelVectors: (attr: PlaceAttributes): Promise<VectorResult> => {
             return client.getFeatures(
                 'BDPARCELLAIRE-VECTEUR_WLD_BDD_WGS84G:parcelle',

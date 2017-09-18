@@ -1,47 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Gp = require("geoportal-access-lib");
 const GeoportalWfsClient = require("./geoportal-wfs-client");
-exports.default = key => {
+const ign_1 = require("./ign");
+exports.default = (key, referer) => {
     const client = new GeoportalWfsClient(key);
+    const ignClient = ign_1.default(key, referer);
     return {
-        findAddress: (address) => {
-            return new Promise((resolve, reject) => {
-                Gp.Services.autoComplete({
-                    apiKey: key,
-                    text: address,
-                    filterOptions: {
-                        type: ["StreetAddress"]
-                    },
-                    onSuccess: (result) => {
-                        resolve(result);
-                    },
-                    onFailure: (err) => {
-                        reject(err);
-                    }
-                });
-            });
-        },
-        fetchParcelInfo: (x, y) => {
-            return new Promise((resolve, reject) => {
-                Gp.Services.reverseGeocode({
-                    apiKey: key,
-                    position: {
-                        x,
-                        y
-                    },
-                    filterOptions: {
-                        type: ["CadastralParcel"]
-                    },
-                    onSuccess: (result) => {
-                        resolve(result);
-                    },
-                    onFailure: (err) => {
-                        reject(err);
-                    }
-                });
-            });
-        },
         fetchParcelVectors: (attr) => {
             return client.getFeatures('BDPARCELLAIRE-VECTEUR_WLD_BDD_WGS84G:parcelle', {
                 code_dep: attr.department,
