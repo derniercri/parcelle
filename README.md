@@ -2,7 +2,7 @@
 
 __Getting started__
 ```
-npm install git+ssh://git@github.com/laibulle/parcel.git
+npm install git+ssh://git@github.com/derniercri/parcelle.git
 ```
 
 ```
