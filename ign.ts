@@ -1,5 +1,4 @@
 import axios from 'axios'
-import * as sax from 'sax'
 import * as parser from 'xml2json'
 
 export interface Position {
@@ -37,6 +36,10 @@ export interface Parcel {
     placeAttributes: PlaceAttributes,
     type: string,
     searchCenterDistance: number
+}
+
+export interface VectorResult {
+    features: Array<GeoJSON.Feature<GeoJSON.Polygon>>
 }
 
 export default (apiKey:string, referer: string) => {
@@ -78,9 +81,9 @@ export default (apiKey:string, referer: string) => {
                 }
             ).then((res) => parsePlaces(res.data.xml))
         },
-        /*parcelVector: (address: Address, maxResults: number): Promise<Array<Address>> => {
+        parcelVector: (attr: PlaceAttributes, maxResults: number): Promise<VectorResult> => {
             return axios.get(
-                wxsUrl, 
+                wxsUrl + '/geoportail/wfs', 
                 {
                     ...options,
                     params: {
@@ -90,11 +93,28 @@ export default (apiKey:string, referer: string) => {
                         typename: 'BDPARCELLAIRE-VECTEUR_WLD_BDD_WGS84G:parcelle',
                         outputFormat: 'application/json',
                         count: maxResults,
-                        cql_filter: `code_dep='59' and code_com='017' and numero='0178' and section='CW' and feuille='1'`
+                        cql_filter: `code_dep='${attr.department}' and code_com='${attr.commune}' and numero='${attr.number}' and section='${attr.section}' and feuille='${attr.sheet}'`
                     }
                 }
-            ).then((res) => res.data.results)
-        },*/
+            ).then((res) => res.data)
+        },
+        buildingsVector: (bbox, maxResults: number): Promise<VectorResult> => {
+            return axios.get(
+                wxsUrl + '/geoportail/wfs', 
+                {
+                    ...options,
+                    params: {
+                        service: 'WFS',
+                        version: '2.0.0',
+                        request: 'GetFeature',
+                        typename: 'BDTOPO_BDD_WLD_WGS84G:bati_remarquable,BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
+                        outputFormat: 'application/json',
+                        count: maxResults,
+                        bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`
+                    }
+                }
+            ).then((res) => res.data)
+        },
         
     }
 }
