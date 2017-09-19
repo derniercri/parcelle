@@ -28,6 +28,7 @@ parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
 __Contribute__
 
 ```
+npm install
 tsc -w -p .
 node node dist/example/index.js
 ```
