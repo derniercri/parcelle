@@ -28,6 +28,8 @@ parcel.findAddress('24 rue de Strasbourg Armentières').then(address => {
 __Contribute__
 
 ```
+export API_KEY=xxxxxxxxxxxxxxxxxxxxx
+export REFERER=xxxxxxxxxxxxxxxxxxxxx
 npm install
 tsc -w -p .
 node node dist/example/index.js
