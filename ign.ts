@@ -53,7 +53,7 @@ export default (apiKey:string, referer: string) => {
     return {
         autoComplete: (address: string, maxResults: number): Promise<Array<Address>> => {
             return axios.get(
-                wxsUrl + '/ols/apis/completion', 
+                wxsUrl + '/ols/apis/completion',
                 {
                     ...options,
                     params: {
@@ -67,7 +67,7 @@ export default (apiKey:string, referer: string) => {
         parcelInfo: (x: number, y: number, maxResults: number): Promise<Parcel> => {
             const parcelInfoXML = xmlTemplate(x, y)
             return axios.get(
-                wxsUrl + '/geoportail/ols', 
+                wxsUrl + '/geoportail/ols',
                 {
                     ...options,
                     params: {
@@ -80,7 +80,7 @@ export default (apiKey:string, referer: string) => {
         },
         parcelVector: (attr: PlaceAttributes, maxResults: number): Promise<FeatureCollection<MultiPolygon>> => {
             return axios.get(
-                wxsUrl + '/geoportail/wfs', 
+                wxsUrl + '/geoportail/wfs',
                 {
                     ...options,
                     params: {
@@ -98,7 +98,7 @@ export default (apiKey:string, referer: string) => {
         buildingsVector: (bbox: number[], maxResults: number): Promise<FeatureCollection<MultiPolygon>> => {
             const bboxStr = `${bbox[1]},${bbox[0]},${bbox[3]},${bbox[2]}`
             return axios.get(
-                wxsUrl + '/geoportail/wfs', 
+                wxsUrl + '/geoportail/wfs',
                 {
                     ...options,
                     params: {
@@ -113,7 +113,7 @@ export default (apiKey:string, referer: string) => {
                 }
             ).then((res) => inverseFeatureCollection(res.data))
         },
-        
+
     }
 }
 
@@ -142,7 +142,7 @@ const xmlTemplate = (x: number, y: number) => {
 const parsePlaces = (str: string): Parcel => {
     const data = JSON.parse(parser.toJson(str)).
         XLS.Response.ReverseGeocodeResponse.ReverseGeocodedLocation
-    
+
     const xy = data['gml:Point']['gml:pos'].split()
 
     const obj = {
@@ -150,7 +150,7 @@ const parsePlaces = (str: string): Parcel => {
         type: 'Parcelle',
         position: {
             x: 0,
-            y: 0, 
+            y: 0,
         },
         placeAttributes: {
             cadastralParcel: '',
@@ -164,7 +164,7 @@ const parsePlaces = (str: string): Parcel => {
             insee: '',
             origin: '',
         }
-    } 
+    }
 
     obj.position.x = xy[0]
     obj.position.y = xy[1]
@@ -206,7 +206,7 @@ const parsePlaces = (str: string): Parcel => {
     return obj
 }
 
-const inverseFeatureCollection = (data: FeatureCollection<MultiPolygon>) => 
+const inverseFeatureCollection = (data: FeatureCollection<MultiPolygon>) =>
     { return {...data, features: data.features.map(item => inverseGeoJson(item))}}
 
 const inverseGeoJson = (data: Feature<MultiPolygon>) => {
